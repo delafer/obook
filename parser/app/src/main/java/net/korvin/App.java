@@ -3,9 +3,12 @@
  */
 package net.korvin;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class App {
     public String getGreeting() {
-        return "Hello World!";
+        return StringUtils.upperCase("hello world and sascha!");
+
     }
 
     public static void main(String[] args) {
