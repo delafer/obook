@@ -1,0 +1,14 @@
+Error parsing: C:\ebooks\bity\Ахманов - Искра над пламенем.fb2
+com.fasterxml.aalto.WFCException: Invalid name start character (0x28)
+ at [row,col {unknown-source}]: [92,282]
+	at com.fasterxml.aalto.in.XmlScanner.reportInputProblem(XmlScanner.java:1333)
+	at com.fasterxml.aalto.in.XmlScanner.reportInvalidNameChar(XmlScanner.java:1406)
+	at com.fasterxml.aalto.in.ReaderScanner.handleEntityInText(ReaderScanner.java:1236)
+	at com.fasterxml.aalto.in.ReaderScanner.skipCharacters(ReaderScanner.java:2613)
+	at com.fasterxml.aalto.in.XmlScanner.skipToken(XmlScanner.java:416)
+	at com.fasterxml.aalto.in.ReaderScanner.nextFromTree(ReaderScanner.java:243)
+	at com.fasterxml.aalto.stax.StreamReaderImpl.next(StreamReaderImpl.java:760)
+	at net.korvin.TagEngine.process(TagEngine.java:62)
+	at net.korvin.ScanFiles.process(ScanFiles.java:52)
+	at net.korvin.ScanFiles.main(ScanFiles.java:30)
+

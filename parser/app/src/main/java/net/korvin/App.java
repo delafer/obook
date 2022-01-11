@@ -3,7 +3,18 @@
  */
 package net.korvin;
 
+import com.fasterxml.aalto.stax.InputFactoryImpl;
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.stax2.XMLInputFactory2;
+
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import java.io.IOException;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 
 public class App {
     public String getGreeting() {
@@ -11,7 +22,58 @@ public class App {
 
     }
 
+    protected XMLInputFactory2 getFactory()
+    {
+        XMLInputFactory2 f = (XMLInputFactory2) InputFactoryImpl.newInstance();
+        //System.out.println("Factory instance: "+f.getClass());
+
+
+        f.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, Boolean.FALSE);
+        f.setProperty(XMLInputFactory.SUPPORT_DTD, Boolean.FALSE);
+        f.setProperty(XMLInputFactory.IS_VALIDATING, Boolean.FALSE);
+
+        f.setProperty(XMLInputFactory.IS_COALESCING, Boolean.FALSE);
+        f.setProperty(XMLInputFactory2.P_PRESERVE_LOCATION, Boolean.FALSE);
+        f.setProperty(XMLInputFactory2.P_REPORT_PROLOG_WHITESPACE, Boolean.FALSE);
+        f.setProperty(XMLInputFactory2.P_LAZY_PARSING, Boolean.TRUE);
+        f.configureForSpeed();
+        return (XMLInputFactory2) f;
+    }
+
+
+    private void setUpXMLParser(ReadableByteChannel channel, byte[] lookAhead) throws IOException {
+        try {
+
+            // We use Woodstox because the StAX implementation provided by OpenJDK reports
+            // character locations incorrectly. Note that Woodstox still currently reports *byte*
+            // locations incorrectly when parsing documents that contain multi-byte characters.
+            com.fasterxml.aalto.stax.InputFactoryImpl xmlInputFactory = (InputFactoryImpl) InputFactoryImpl.newFactory();
+            xmlInputFactory.configureForSpeed();
+
+            //xmlInputFactory.createXMLStreamReader()
+            XMLStreamReader parser =
+                    xmlInputFactory.createXMLStreamReader(Channels.newInputStream(channel), "UTF-8");
+
+            // Current offset should be the offset before reading the record element.
+            while (true) {
+                int event = parser.next();
+                if (event == XMLStreamConstants.START_ELEMENT) {
+                    String localName = parser.getLocalName();
+                    if (localName.equals("abc")) {
+                        break;
+                    }
+                }
+            }
+        } catch (FactoryConfigurationError | XMLStreamException e) {
+            throw new IOException(e);
+        }
+    }
+
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        //System.out.println(new App().getGreeting());
+        App app = new App();
+        System.out.println(app.getFactory());
+        System.out.println(XMLInputFactory2.newFactory());
+        System.out.println("привет");
     }
 }

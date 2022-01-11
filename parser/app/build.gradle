@@ -60,7 +60,7 @@ compileJava {
     options.compilerArgs << '-Xlint:deprecation'
 }
 
-java {
+/*java {
     withSourcesJar()
     withJavadocJar()
 }
@@ -68,7 +68,7 @@ java {
 artifacts {
     archives sourcesJar
     archives javadocJar
-}
+}*/
 
 application {
     // Define the main class for the application.
