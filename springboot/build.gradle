@@ -1,0 +1,4 @@
+allprojects {
+    group = 'net.j7.ebook'
+    version = '0.0.1-SNAPSHOT'
+}

@@ -21,12 +21,33 @@
     "lib": [
       "es2020",
       "dom"
-    ]
+    ],
+  "paths": {
+      "$pipes/*": ["src/app/shared/pipes/*"],
+      "$directives/*": ["src/app/shared/directives/*"],
+      "$validators/*": ["src/app/shared/validators/*"],
+      "$models/*": ["src/app/common/models/*"],
+      "$api/*": ["src/app/common/api/*"],
+      "$service/*": ["src/app/core/services/*"],
+      "$guards/*": ["src/app/core/guards/*"],
+      "$mocks/*": ["src/app/core/mocks/*"],
+      "$features/*": ["src/app/features/*"],
+      "$home/*": ["src/app/features/module.home/*"],
+      "$login/*": ["src/app/features/module.login/*"],
+      "$shared/*": ["src/app/shared/*"],
+      "$common/*": ["src/app/common/*"],
+      "$core/*": ["src/app/core/*"],
+      "$root/*": ["./*"],
+      "$environment/*": ["src/environments/*"],
+      "$app/*": ["src/app/*"],
+      "$testing/*": ["src/testing/*"]
+    },
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
+    "enableIvy": true,
     "strictTemplates": true
   }
 }
