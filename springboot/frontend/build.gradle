@@ -1,7 +1,12 @@
 plugins {
   id 'java'
+  id 'idea'
   id "com.github.node-gradle.node" version "3.1.1"
 }
+
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+
 
 def generatedResources = "src/generated/resources"
 
@@ -41,6 +46,10 @@ task ngServe(type: NodeTask, dependsOn: 'yarn') {
   script = project.file('node_modules/@angular/cli/bin/ng.js')
   args = ['serve', '--open']
   options = ['--openssl-legacy-provider']
+}
+
+task prepareKotlinBuildScriptModel {
+
 }
 
 processResources.dependsOn 'ngBuild'

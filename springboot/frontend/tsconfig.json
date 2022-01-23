@@ -24,6 +24,7 @@
       "dom"
     ],
   "paths": {
+      "tslib" : ["node_modules/tslib/tslib.d.ts"],
       "$pipes/*": ["src/app/shared/pipes/*"],
       "$directives/*": ["src/app/shared/directives/*"],
       "$validators/*": ["src/app/shared/validators/*"],
