@@ -1,0 +1,49 @@
+plugins {
+  id 'java'
+  id "com.github.node-gradle.node" version "3.1.1"
+}
+
+def generatedResources = "src/generated/resources"
+
+sourceSets {
+  main {
+    output.dir(generatedResources, builtBy: 'ngBuild')
+  }
+}
+
+node {
+  version = '17.4.0'
+  yarnVersion = '1.22.17'
+  download = true
+  workDir = file("${project.buildDir}/node")
+  yarnWorkDir = file("${project.buildDir}/yarn")
+  nodeModulesDir = file("${project.projectDir}")
+}
+
+
+jar.dependsOn 'ngBuild'
+
+jar {
+  from 'dist' into 'static'
+}
+
+task audit(type: YarnTask, dependsOn: 'yarn') {
+  args = ['audit']
+}
+
+task ngBuild(type: NodeTask, dependsOn: 'yarn') {
+  script = project.file('node_modules/@angular/cli/bin/ng.js')
+  args = ['build', '--configuration','production']
+  options = ['--openssl-legacy-provider']
+}
+
+task ngServe(type: NodeTask, dependsOn: 'yarn') {
+  script = project.file('node_modules/@angular/cli/bin/ng.js')
+  args = ['serve', '--open']
+  options = ['--openssl-legacy-provider']
+}
+
+processResources.dependsOn 'ngBuild'
+
+clean.delete << file('node_modules')
+clean.delete << file(generatedResources)

@@ -1,0 +1,49 @@
+<div class="modal-header" id="limitrequest-modal-header">
+  <h5 class="modal-title pull-left">
+    <p>{{ name }}</p>
+  </h5>
+  <div class="pull-right">
+    <button
+      id="limitrequest-modal-close-buuton"
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="activeModal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+</div>
+<div class="modal-body" id="limitrequest-modal-body">
+  <div class="container">
+    <div class="row">
+      <span id="limitrequest-modal-text">
+        <i class="fa fa-balance-scale fa-lg text-primary">&nbsp; </i>
+        {{ text1 }}
+        <hr class="divider" />
+        <div class="row underline">
+          <div class="col pr-0">{{ text2 }}</div>
+          <div class="col pl-0 text-right l-bold">{{ text3 }}</div>
+        </div>
+      </span>
+    </div>
+  </div>
+</div>
+<div id="limitrequest-modal-footer" class="modal-footer">
+  <button
+    id="limitrequest-modal-sendbutton"
+    type="button"
+    class="btn btn-primary btn-success mr-auto"
+    (click)="setSend()"
+  >
+    <i class="fa fa-send text-white"></i>&nbsp;&nbsp;Limit beantragen
+  </button>
+  <button
+    id="limitrequest-modal-abortbutton"
+    type="button"
+    class="btn btn-secondary btn-warning"
+    (click)="setAbort()"
+  >
+    <i class="fa fa-ban text-white"></i>&nbsp;&nbsp;Abbrechen
+  </button>
+</div>

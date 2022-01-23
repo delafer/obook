@@ -8,4 +8,4 @@ pluginManagement {
 
 rootProject.name = 'ebook-indexer-parent'
 
-include 'backend'
+include 'frontend', 'backend'

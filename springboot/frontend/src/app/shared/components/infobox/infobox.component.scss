@@ -1,0 +1,28 @@
+.dark-modal .modal-content {
+  background-color: #1e2021;
+  color: white;
+}
+.dark-modal .close {
+  color: white;
+}
+.close {
+  outline: none;
+}
+
+.underline {
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.modal-footer {
+  padding: 0.6rem;
+}
+
+.modal-header {
+  padding: 0.5rem 0.5rem;
+}
+
+hr.divider {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border-width: 1px;
+}
