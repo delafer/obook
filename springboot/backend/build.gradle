@@ -8,11 +8,6 @@ plugins {
 group = 'net.j7.ebook'
 version = '0.0.1-SNAPSHOT'
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
-compileJava.options.encoding = 'UTF-8'
-
-
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
@@ -24,8 +19,10 @@ repositories {
 }
 
 dependencies {
+	implementation project(':shared')
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'com.fasterxml.jackson.module:jackson-module-blackbird:2.13.1'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'

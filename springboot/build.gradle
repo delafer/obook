@@ -1,4 +1,28 @@
 allprojects {
     group = 'net.j7.ebook'
     version = '0.0.1-SNAPSHOT'
+    repositories {
+    	mavenCentral()
+        google()
+    }
+
+    /* //alternative way to set encoding and java version
+    //noinspection GroovyAssignabilityCheck
+    tasks.withType(JavaCompile) {
+        options.release.set(17)
+        options.encoding = 'UTF-8'
+    }
+    */
+}
+
+subprojects {
+    apply plugin: 'java'
+    compileJava.options.encoding = 'UTF-8'
+    compileTestJava.options.encoding = 'UTF-8'
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }
