@@ -3,10 +3,12 @@ package net.j7.ebook.api.ws;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Controller
 @AllArgsConstructor
 @Slf4j
+@CrossOrigin(origins = "*")
 public class StudentThrowSocketController {
 
 //    private final StudentService studentService;

@@ -1,1 +1,12 @@
 <p>workspace works!</p>
+<div class="container-fluid">
+  <div class="btn-group gap-2" role="group">
+    <button class="btn btn-primary" (click)="method1()"><i class="fa fa-calendar"></i> Connect WS</button>
+    <button class="btn btn-secondary" (click)="method2()">Send Message</button>
+    <button class="btn btn-success" (click)="method3()">Disconnect</button>
+  </div>
+  <div class="mb-3 mt-3">
+    <label for="textarea1" class="form-label">Output log</label>
+    <textarea class="form-control" id="textarea1" rows="3" [value]="someText"></textarea>
+  </div>
+</div>
