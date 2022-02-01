@@ -12,6 +12,12 @@ plugins {
     id 'idea'
 }
 
+compileJava {
+    //options.compilerArgs << '-Xlint:unchecked'
+    //options.compilerArgs << '-Xlint:deprecation'
+}
+
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
