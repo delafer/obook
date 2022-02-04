@@ -3,6 +3,7 @@ package net.korvin.fb2;
 import net.j7.ebook.entity.ebook.Book;
 import net.korvin.api.StaxModel;
 import net.korvin.entities.Tag;
+import net.korvin.entities.TagOld;
 import net.korvin.entities.TagParser;
 
 import javax.xml.stream.XMLStreamReader;
@@ -11,15 +12,15 @@ import static net.korvin.utils.ObjectPool.on;
 
 public class Fb2Book implements StaxModel {
 
-    Tag model =
-    Tag.of("FictionBook",
-        Tag.of("description",
-            Tag.of("title-info",
-                Tag.of("genre", Fb2Book::readGenre),
-                Tag.of("lang", Fb2Book::readLang))
+    TagOld model =
+    TagOld.of("FictionBook",
+        TagOld.of("description",
+            TagOld.of("title-info",
+                TagOld.of("genre", Fb2Book::readGenre),
+                TagOld.of("lang", Fb2Book::readLang))
         ),
-        Tag.of("body"),
-        Tag.of("binary")
+        TagOld.of("body"),
+        TagOld.of("binary")
     );
 
     public static TagParser readGenre(String keyParser, Book model) {
@@ -45,7 +46,8 @@ public class Fb2Book implements StaxModel {
     }
 
     public Tag getModel() {
-        return this.model;
+        /* return this.model;*/
+        return null;
     }
 
 }

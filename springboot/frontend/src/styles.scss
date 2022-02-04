@@ -1,4 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
+$enable-grid-classes: true;
+$enable-cssgrid: true;
+
 @import '~bootstrap/scss/bootstrap';
 @import '~font-awesome/scss/font-awesome.scss';
 @import '~ngx-toastr/toastr.css';

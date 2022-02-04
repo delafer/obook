@@ -10,7 +10,6 @@ import net.korvin.utils.TagStack;
 import org.codehaus.stax2.XMLInputFactory2;
 
 import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Transformer;
@@ -97,7 +96,7 @@ public class TagEngine {
                     String tag = tagName(streamReader);
 
                     tagStack.push(tag);
-                    parser = Tag.parser(tagStack.toString(),tag, book); //TODO
+                    parser = Tag.parser(tagStack,tag, book); //TODO
 
 //                    System.out.println("start: ["+tag+"] ("+tagStack+") >>>"+parser);
 
@@ -129,6 +128,7 @@ public class TagEngine {
                 }
             }
         }
+        //TagProcessor t = processorMap.get(tagStack);
     }
 
     void test(XMLStreamReader reader){

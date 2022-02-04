@@ -1,7 +1,13 @@
 package net.korvin;
 
+import sun.misc.Unsafe;
+
 public class TestMain {
     public static void main(String[] args) {
+
+//        Unsafe a;
+//        a.getUnsafe().get
+
         TagEngine te = new TagEngine();
         try {
 

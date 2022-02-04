@@ -96,18 +96,41 @@ public class TagStack {
     }
 
     private int checkSubset(TagStack ots) {
+        return checkSubset(ots, 0);
+    }
+
+    public int checkSubset(TagStack ots, int offset) {
         Chunk a = this.chunk, b = ots.chunk;
         int ai = a.added, bi = b.added;
 
+        while (ai > 0 && offset-- > 0) {
+            ai--;
+//            System.out.println("SKIPPED: "+a.tags[ai]);
+            if (ai == 0 && a.parent != null) { a = a.parent; ai = a.added; }
+        }
+
         while (ai > 0 && bi > 0) {
             String aCmp = a.tags[--ai], bCmp = b.tags[--bi];
-
+//            System.out.println(aCmp+" VS "+bCmp);
             if (!Objects.equals(aCmp, bCmp)) return UNEQUAL;
 
             if (ai == 0 && a.parent != null) { a = a.parent; ai = a.added; }
             if (bi == 0 && b.parent != null) { b = b.parent; bi = b.added; }
         }
         return Integer.compare(ai, bi);
+    }
+
+    /**
+     * ("html/body/head".isChild("html/body")) -> true<br/> 3:2 true
+     * ("body/head".isChild("html/body")) -> true<br/> 2:2, 2:3 true
+     * ("html/body/head".isChild("body")) -> false<br/> 3:1 false
+     * ("html/body".isChild("html/body")) -> false<br/> 2:2 false
+     *
+     */
+    public boolean isChild(TagStack toCheck) {
+        if (this.size() > toCheck.size()+1) return false;
+        int cmp = checkSubset(toCheck, 1);
+        return cmp <= 0 && cmp != UNEQUAL;
     }
 
     public boolean contains(TagStack toCheck) {
@@ -145,7 +168,7 @@ public class TagStack {
 
     @Override
     public String toString() {
-        return "TagStack(" + chunk + ')';
+        return "TagStack{" + chunk + '}';
     }
 
     static class Chunk {

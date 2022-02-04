@@ -1,6 +1,7 @@
 package net.korvin.entities;
 
 import net.j7.ebook.entity.ebook.Book;
+import net.korvin.utils.TagStack;
 
 import javax.xml.stream.XMLStreamReader;
 
@@ -11,6 +12,8 @@ public abstract class TagParser extends PoolObject {
     Book model;
     TagParser parent;
 
+    TagStack path;
+
     public void process(final int eventType, final XMLStreamReader reader) {
         switch (eventType) {
             case START_ELEMENT -> start(reader);
@@ -18,6 +21,11 @@ public abstract class TagParser extends PoolObject {
             case CHARACTERS -> chars(reader);
         };
 
+    }
+
+    TagStack path() {
+        if (null == path) path = new TagStack();
+        return path;
     }
 
     public void start(final XMLStreamReader reader) {};
