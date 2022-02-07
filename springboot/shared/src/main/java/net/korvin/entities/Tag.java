@@ -27,13 +27,15 @@ public class Tag {
 
     String path;
     BiFunction<String, Book, TagParser>  consumer;
+    boolean allowChilds;
     Map<String, Tag> children = new TreeMap<>();
 
     public void init() {}
 
-    private Tag(String tagPath, BiFunction<String, Book, TagParser> consumer) {
+    private Tag(String tagPath, BiFunction<String, Book, TagParser> consumer, boolean allowChilds) {
         this.path = tagPath;
         this.consumer = consumer;
+        this.allowChilds = allowChilds;
     }
 
     private Tag(String tagPath, Tag... structs) {
@@ -51,7 +53,11 @@ public class Tag {
 //    }
 
     public static Tag of(String tag, BiFunction<String, Book, TagParser>  consumer) {
-        return new Tag(tag, consumer);
+        return Tag.of(tag, consumer, true);
+    }
+
+    public static Tag of(String tag, BiFunction<String, Book, TagParser>  consumer, boolean allowChilds) {
+        return new Tag(tag, consumer, allowChilds);
     }
 
     public static Tag of(String tag, Tag... structs) {
@@ -85,6 +91,7 @@ public class Tag {
             if (null == ret) ret = xtag;
         }
         xtag.consumer = tagArg.consumer;
+        xtag.allowChilds = tagArg.allowChilds;
         //tagArg.buildTree(root);
         //xtagTree.parent = xtag;
         return ret;
@@ -96,6 +103,7 @@ public class Tag {
             if (x.consumer != null)
                 throw new IllegalStateException("Multiple processors for same tag are not allowed.");
             x.consumer = y.consumer;
+            x.allowChilds = y.allowChilds;
         }
         if (y.children != null) {
             if (x.children == null) {

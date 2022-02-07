@@ -25,10 +25,10 @@ public class Fb2Book implements StaxModel {
         Tag struct =
             Tag.of("FictionBook",
                 Tag.of("description",
-                   Tag.of("title-info/genre", this::readGenre),
-                   Tag.of("title-info/lang", this::readGenre),
-                   Tag.of("title-info/book-title", this::readGenre),
-                   Tag.of("title-info/author", this::readGenre)),
+//                   Tag.of("title-info/genre", this::readGenre),
+//                   Tag.of("title-info/lang", this::readGenre),
+                   Tag.of("title-info/author", this::readGenre, true)),
+//                   Tag.of("title-info/author", this::readGenre)),
                 Tag.of("body"),
                 Tag.of("binary")
             );
@@ -42,14 +42,14 @@ public class Fb2Book implements StaxModel {
         book.modelReader();
     }
 
-    public TagParser readGenre(String keyParser, Book model) {
-        return on.get(keyParser /*"genreParser"*/, $ -> new TagParser() {
+    public TagParser readGenre(String tag, Book model) {
+        return on.get(tag /*"genreParser"*/, $ -> new TagParser() {
             @Override
             public void start(XMLStreamReader reader) {
                // System.out.println("(READ)" + reader.getName().getLocalPart());
             }
             public void chars(XMLStreamReader reader) {
-                System.out.println(keyParser+"::: " + reader.getText());
+                System.out.println(tag+"::: " + reader.getText());
             }
         });
     }

@@ -5,12 +5,14 @@ import net.j7.ebook.entity.ebook.Book;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 public class XmlTag {
     Map<String, XmlTag> children = new TreeMap<>();
     XmlTag parent;
     String tag;
     BiFunction<String, Book, TagParser> consumer;
+    public boolean allowChilds;
     public XmlTag(String tag) {
         this(tag, null);
     }
@@ -18,6 +20,10 @@ public class XmlTag {
     public XmlTag(String tag, XmlTag parent) {
         this.tag = tag;
         this.parent = parent;
+    }
+
+    public boolean skipChilds() {
+        return !allowChilds;
     }
 
     public XmlTag getTag(String tag) {
@@ -53,8 +59,22 @@ public class XmlTag {
         return sb.toString();
     }
 
+    private Supplier<BiFunction<String, Book, TagParser>> lazyConsumer = () -> {
+        BiFunction<String, Book, TagParser> val = initConsumer(true);
+        lazyConsumer = () -> val;
+        return val;
+    };
+
+    BiFunction<String, Book, TagParser> initConsumer(boolean root) {
+        if (consumer != null) {
+            if (root || allowChilds) return consumer;
+        }
+        return parent != null ? parent.initConsumer(false) : null;
+    }
+
+
     public BiFunction<String, Book, TagParser> getConsumer() {
-        return consumer != null ? consumer : parent != null ? parent.getConsumer() : null;
+        return lazyConsumer.get();
     }
 
     public TagParser getParser(String keyParser, Book model) {
