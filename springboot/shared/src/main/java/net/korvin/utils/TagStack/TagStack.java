@@ -1,13 +1,12 @@
-package net.korvin.utils;
+package net.korvin.utils.TagStack;
 
-import java.util.Objects;
+import org.jetbrains.annotations.NotNull;
 
-public class TagStack {
+public class TagStack extends TagStackBase implements Comparable<TagStack> {
 
-    private static final int UNEQUAL = -100;
     private static final int CHUNK_SIZE = 8;
 
-    Chunk chunk = new Chunk();
+    public Chunk chunk = new Chunk();
     private int size = 0;
 
     public int size() {
@@ -71,6 +70,10 @@ public class TagStack {
         return chunk.added > 0 ? chunk.tags[chunk.added-1] : null;
     }
 
+    public TagStack copy() {
+        return TagStack.parseTags(this.chunk.toString());
+    }
+
     /**
      * Parses xml path string like this "html/head/title"
      * and converts it to TackStack object
@@ -96,28 +99,7 @@ public class TagStack {
     }
 
     private int checkSubset(TagStack ots) {
-        return checkSubset(ots, 0);
-    }
-
-    public int checkSubset(TagStack ots, int offset) {
-        Chunk a = this.chunk, b = ots.chunk;
-        int ai = a.added, bi = b.added;
-
-        while (ai > 0 && offset-- > 0) {
-            ai--;
-//            System.out.println("SKIPPED: "+a.tags[ai]);
-            if (ai == 0 && a.parent != null) { a = a.parent; ai = a.added; }
-        }
-
-        while (ai > 0 && bi > 0) {
-            String aCmp = a.tags[--ai], bCmp = b.tags[--bi];
-//            System.out.println(aCmp+" VS "+bCmp);
-            if (!Objects.equals(aCmp, bCmp)) return UNEQUAL;
-
-            if (ai == 0 && a.parent != null) { a = a.parent; ai = a.added; }
-            if (bi == 0 && b.parent != null) { b = b.parent; bi = b.added; }
-        }
-        return Integer.compare(ai, bi);
+        return checkSubset(this, ots, 0);
     }
 
     /**
@@ -129,7 +111,7 @@ public class TagStack {
      */
     public boolean isChild(TagStack toCheck) {
         if (this.size() > toCheck.size()+1) return false;
-        int cmp = checkSubset(toCheck, 1);
+        int cmp = checkSubset(this, toCheck, 1);
         return cmp <= 0 && cmp != UNEQUAL;
     }
 
@@ -169,6 +151,11 @@ public class TagStack {
     @Override
     public String toString() {
         return "TagStack{" + chunk + '}';
+    }
+
+    @Override
+    public int compareTo(@NotNull TagStack o) {
+        return TagStack.compare(this, o);
     }
 
     static class Chunk {

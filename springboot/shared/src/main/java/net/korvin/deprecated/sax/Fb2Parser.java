@@ -1,4 +1,4 @@
-package net.korvin.sax;
+package net.korvin.deprecated.sax;
 
 import net.j7.commons.logger.LoggerJUL;
 import org.xml.sax.Attributes;

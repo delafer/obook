@@ -1,7 +1,8 @@
-package net.korvin.entities;
+package net.korvin.deprecated;
 
 import lombok.Setter;
 import net.j7.ebook.entity.ebook.Book;
+import net.korvin.entities.TagParser;
 import net.korvin.utils.Utils;
 
 import java.util.HashMap;

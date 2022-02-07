@@ -1,7 +1,7 @@
 package net.korvin.entities;
 
 import net.j7.ebook.entity.ebook.Book;
-import net.korvin.utils.TagStack;
+import net.korvin.utils.TagStack.TagStack;
 
 import javax.xml.stream.XMLStreamReader;
 

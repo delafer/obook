@@ -15,19 +15,6 @@ public class Volume {
     private Integer chars;
     private Integer size;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Volume cmp)) return false;
-        return equal(pages, cmp.pages) &&
-               equal(chars, cmp.chars) &&
-               equal(size, cmp.size);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(pages, chars, size);
-    }
 
 //    public static void main(String[] args) {
 //        double x = 0;
@@ -54,4 +41,20 @@ public class Volume {
         if (pages != null) return Math.round(pages.floatValue() * CHARS_PER_PAGE);
         return 0;
     }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Volume cmp)) return false;
+        return equal(pages, cmp.pages) &&
+                equal(chars, cmp.chars) &&
+                equal(size, cmp.size);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pages, chars, size);
+    }
+
 }

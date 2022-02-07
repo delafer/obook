@@ -1,9 +1,9 @@
 package net.korvin.api;
 
-import net.korvin.entities.Tag;
+import net.korvin.entities.XmlTag;
 
 public interface StaxModel {
 
-    public Tag getModel();
+    public XmlTag getModel();
 
 }

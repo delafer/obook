@@ -1,5 +1,7 @@
 package net.korvin.utils;
 
+import net.korvin.utils.TagStack.TagStack;
+
 import java.util.*;
 
 public class TagStackMap<E> {
