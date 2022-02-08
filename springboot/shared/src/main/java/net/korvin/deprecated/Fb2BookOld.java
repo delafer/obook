@@ -2,8 +2,9 @@ package net.korvin.deprecated;
 
 import net.j7.ebook.entity.ebook.Book;
 import net.korvin.api.StaxModel;
-import net.korvin.entities.TagParser;
+import net.korvin.entities.parsers.TagParser;
 import net.korvin.entities.XmlTag;
+import net.korvin.utils.TagStack.TagStack;
 
 import javax.xml.stream.XMLStreamReader;
 
@@ -25,7 +26,7 @@ public class Fb2BookOld implements StaxModel {
     public static TagParser readGenre(String keyParser, Book model) {
         return on.get(keyParser /*"genreParser"*/, $ -> new TagParser() {
             @Override
-            public void start(XMLStreamReader reader) {
+            public void start(XMLStreamReader reader, TagStack tagPath) {
                 System.out.println(":x:" + reader.getName().getLocalPart());
             }
 

@@ -15,8 +15,8 @@ public class ScanFiles {
     public static void main(String[] args) {
         try {
             //String oldScan = "C:\\ebooks\\bity";
-            String oldScan = "C:\\arbeit\\ebooks\\code\\fb2\\example\\xx";
-           // String oldScan = "a:\\book\\";
+            //String oldScan = "C:\\arbeit\\ebooks\\code\\fb2\\example\\covers\\";
+           String oldScan = "a:\\books\\";
             List<File> files = Files.walk(Paths.get(oldScan))
                     .sequential()
                     .filter(Files::isRegularFile)

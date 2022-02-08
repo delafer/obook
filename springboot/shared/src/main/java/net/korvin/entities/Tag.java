@@ -1,6 +1,7 @@
 package net.korvin.entities;
 
 import net.j7.ebook.entity.ebook.Book;
+import net.korvin.entities.parsers.TagParser;
 import net.korvin.utils.StringIterator;
 
 import java.util.Iterator;
@@ -27,15 +28,13 @@ public class Tag {
 
     String path;
     BiFunction<String, Book, TagParser>  consumer;
-    boolean allowChilds;
     Map<String, Tag> children = new TreeMap<>();
 
     public void init() {}
 
-    private Tag(String tagPath, BiFunction<String, Book, TagParser> consumer, boolean allowChilds) {
+    private Tag(String tagPath, BiFunction<String, Book, TagParser> consumer) {
         this.path = tagPath;
         this.consumer = consumer;
-        this.allowChilds = allowChilds;
     }
 
     private Tag(String tagPath, Tag... structs) {
@@ -52,12 +51,9 @@ public class Tag {
 //        return entry != null ? entry.apply(tag, book) : null;
 //    }
 
-    public static Tag of(String tag, BiFunction<String, Book, TagParser>  consumer) {
-        return Tag.of(tag, consumer, true);
-    }
 
-    public static Tag of(String tag, BiFunction<String, Book, TagParser>  consumer, boolean allowChilds) {
-        return new Tag(tag, consumer, allowChilds);
+    public static Tag of(String tag, BiFunction<String, Book, TagParser>  consumer) {
+        return new Tag(tag, consumer);
     }
 
     public static Tag of(String tag, Tag... structs) {
@@ -91,7 +87,6 @@ public class Tag {
             if (null == ret) ret = xtag;
         }
         xtag.consumer = tagArg.consumer;
-        xtag.allowChilds = tagArg.allowChilds;
         //tagArg.buildTree(root);
         //xtagTree.parent = xtag;
         return ret;
@@ -103,7 +98,6 @@ public class Tag {
             if (x.consumer != null)
                 throw new IllegalStateException("Multiple processors for same tag are not allowed.");
             x.consumer = y.consumer;
-            x.allowChilds = y.allowChilds;
         }
         if (y.children != null) {
             if (x.children == null) {

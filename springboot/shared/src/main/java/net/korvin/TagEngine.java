@@ -2,7 +2,7 @@ package net.korvin;
 
 import com.fasterxml.aalto.stax.InputFactoryImpl;
 import net.j7.ebook.entity.ebook.Book;
-import net.korvin.entities.TagParser;
+import net.korvin.entities.parsers.TagParser;
 import net.korvin.entities.XmlTag;
 import net.korvin.fb2.Fb2Book;
 import net.korvin.utils.TagStack.TagStack;
@@ -79,18 +79,18 @@ public class TagEngine {
                         if (null !=next) {
                             parser = next.getParser(tag, book);
                         } else
-                        if (stackStruct.peek().skipChilds()) {
+                        if (parser != null && !parser.allowChilds()) {
                              parser = null;
                         }
                     }
-                    if (null != parser) parser.process(eventType, streamReader);
+                    if (null != parser) parser.process(eventType, streamReader, stackPath);
                 }
                 case END_ELEMENT -> {
                     String tag = tagName(streamReader);
                     if (model.rootTag().equals(tag)) {
                         eod = true;
                     } else {
-                        if (null != parser) parser.process(eventType, streamReader);
+                        if (null != parser) parser.process(eventType, streamReader, stackPath);
                         stackPath.pop(); //tagStack.pop(tag)
                         next = stackStruct.pop();
                         if (null != next) {
@@ -101,13 +101,16 @@ public class TagEngine {
                 case START_DOCUMENT -> { /* ignore */}
                 case END_DOCUMENT -> { eod = true; }
                 case CDATA, CHARACTERS, ENTITY_DECLARATION, ENTITY_REFERENCE -> {
-                    if (null != parser) parser.process(eventType, streamReader);
+                    if (null != parser) parser.process(eventType, streamReader, stackPath);
                 }
                 default -> {
                     System.out.println("UNPARSED EVENT: "+eventType);
                 }
             }
         }
+
+
+        System.out.println("FINISHED: "+book.getAuthors());
         //TagProcessor t = processorMap.get(tagStack);
     }
 

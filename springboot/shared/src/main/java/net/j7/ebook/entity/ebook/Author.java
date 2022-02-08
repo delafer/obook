@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Objects;
+import java.util.StringJoiner;
 
 import static net.korvin.utils.Utils.equal;
 @Getter
@@ -18,6 +19,9 @@ public class Author {
     private String email;
     private String uri;
     private String illustrator;
+
+    public Author() {
+    }
 
     public Author(String forename, String surname) {
         this.forename = forename;
@@ -43,4 +47,17 @@ public class Author {
         return Objects.hash(forename, surname, midname, penname, srcName, email, uri, illustrator);
     }
 
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Author.class.getSimpleName() + "[", "]")
+                .add("forename='" + forename + "'")
+                .add("surname='" + surname + "'")
+                .add("midname='" + midname + "'")
+                .add("penname='" + penname + "'")
+                .add("srcName='" + srcName + "'")
+                .add("email='" + email + "'")
+                .add("uri='" + uri + "'")
+                .add("illustrator='" + illustrator + "'")
+                .toString();
+    }
 }

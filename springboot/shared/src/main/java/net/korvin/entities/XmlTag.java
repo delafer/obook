@@ -1,6 +1,7 @@
 package net.korvin.entities;
 
 import net.j7.ebook.entity.ebook.Book;
+import net.korvin.entities.parsers.TagParser;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -12,7 +13,6 @@ public class XmlTag {
     XmlTag parent;
     String tag;
     BiFunction<String, Book, TagParser> consumer;
-    public boolean allowChilds;
     public XmlTag(String tag) {
         this(tag, null);
     }
@@ -20,10 +20,6 @@ public class XmlTag {
     public XmlTag(String tag, XmlTag parent) {
         this.tag = tag;
         this.parent = parent;
-    }
-
-    public boolean skipChilds() {
-        return !allowChilds;
     }
 
     public XmlTag getTag(String tag) {
@@ -66,10 +62,7 @@ public class XmlTag {
     };
 
     BiFunction<String, Book, TagParser> initConsumer(boolean root) {
-        if (consumer != null) {
-            if (root || allowChilds) return consumer;
-        }
-        return parent != null ? parent.initConsumer(false) : null;
+        return (consumer != null) ? consumer : parent != null ? parent.initConsumer(false) : null;
     }
 
 

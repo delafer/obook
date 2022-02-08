@@ -1,17 +1,12 @@
-package net.korvin.utils;
+package net.korvin.entities;
 
+import net.korvin.api.StaxModel;
 import net.korvin.entities.parsers.TagParser;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
-public class ObjectPool {
-
-    public static final ObjectPool on = new ObjectPool();
-
-    static ObjectPool on() {
-        return on;
-    }
+public abstract class AbstractBook implements StaxModel {
 
     private ConcurrentHashMap<String, TagParser> map = new ConcurrentHashMap<>();
 
