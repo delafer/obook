@@ -2,9 +2,9 @@ package net.korvin;
 
 import com.fasterxml.aalto.stax.InputFactoryImpl;
 import net.j7.ebook.entity.ebook.Book;
-import net.korvin.entities.parsers.TagParser;
+import net.korvin.entities.AbstractBook;
 import net.korvin.entities.XmlTag;
-import net.korvin.fb2.Fb2Book;
+import net.korvin.entities.parsers.TagParser;
 import net.korvin.utils.TagStack.TagStack;
 import org.codehaus.stax2.XMLInputFactory2;
 
@@ -17,14 +17,21 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Stack;
+import java.util.function.Supplier;
 
 import static javax.xml.stream.XMLStreamConstants.*;
 
-public class TagEngine {
+public abstract class StaxReader {
 
 
-    public void process(String fileName) throws IOException,
-            TransformerException, XMLStreamException {
+    private Supplier<XMLInputFactory2> factory = () -> {
+        XMLInputFactory2 val = getFactory();
+        factory = () -> val;
+        return val;
+    };
+
+
+    public void process(String fileName) throws IOException, TransformerException, XMLStreamException {
         FileInputStream fis = new FileInputStream(fileName);
         process(fis);
         fis.close();
@@ -33,9 +40,6 @@ public class TagEngine {
     protected XMLInputFactory2 getFactory()
     {
         XMLInputFactory2 f = (XMLInputFactory2) InputFactoryImpl.newInstance();
-        //System.out.println("Factory instance: "+f.getClass());
-
-
         f.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, Boolean.FALSE);
         f.setProperty(XMLInputFactory.SUPPORT_DTD, Boolean.FALSE);
         f.setProperty(XMLInputFactory.IS_VALIDATING, Boolean.FALSE);
@@ -54,14 +58,12 @@ public class TagEngine {
         return streamReader.getName().getLocalPart();
     }
 
-    public void process(InputStream inputStream) throws FileNotFoundException,
-            XMLStreamException, TransformerException {
-        XMLInputFactory factory = getFactory();
-        factory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES,Boolean.FALSE);
+    public Book process(InputStream inputStream) throws FileNotFoundException, XMLStreamException, TransformerException {
+        XMLInputFactory factory = this.factory.get();
         XMLStreamReader streamReader = factory.createXMLStreamReader(inputStream);
         var stackPath = new TagStack();
         var stackStruct = new Stack<XmlTag>();
-        Fb2Book model = new Fb2Book();
+        AbstractBook model = getParsingModel();
         var book = new Book();
         TagParser parser = null;
         XmlTag next = model.getModel();
@@ -112,6 +114,9 @@ public class TagEngine {
 
         System.out.println("FINISHED: "+book.getAuthors());
         //TagProcessor t = processorMap.get(tagStack);
+        return book;
     }
+
+    abstract AbstractBook getParsingModel();
 
 }

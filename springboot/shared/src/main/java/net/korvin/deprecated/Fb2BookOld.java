@@ -45,6 +45,11 @@ public class Fb2BookOld implements StaxModel {
         return on.get(keyParser, $ -> new TagParser(){});
     }
 
+    @Override
+    public String rootTag() {
+        return null;
+    }
+
     public XmlTag getModel() {
         /* return this.model;*/
         return null;

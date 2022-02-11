@@ -67,7 +67,7 @@ public class XmlTag {
 
 
     public BiFunction<String, Book, TagParser> getConsumer() {
-        return lazyConsumer.get();
+        return initConsumer(true); //lazyConsumer.get();
     }
 
     public TagParser getParser(String keyParser, Book model) {

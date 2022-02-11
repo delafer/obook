@@ -9,7 +9,12 @@ import javax.xml.stream.XMLStreamReader;
 import static javax.xml.stream.XMLStreamConstants.*;
 
 public abstract class TagParser extends PoolObject {
-    {System.out.println("Instantiated: "+this.getClass().getSimpleName());}
+    static int j = 0;
+    {
+        j++;
+        System.out.println("Instantiated: "+this.getClass().getSimpleName()+"["+j+"]");
+
+    }
     Book model;
     TagParser parent;
 

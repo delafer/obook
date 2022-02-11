@@ -15,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Base64;
+import java.util.Objects;
 
 public class Fb2Book extends AbstractBook {
 
@@ -31,18 +32,44 @@ public class Fb2Book extends AbstractBook {
         Tag struct =
             Tag.of("FictionBook",
                 Tag.of("description",
-//                   Tag.of("title-info/genre", this::readGenre),
-//                   Tag.of("title-info/lang", this::readGenre),
-                     Tag.of("title-info/author", this::newAuthor),
-                     Tag.of("title-info/author/first-name", this::authorFirstName),
-                    Tag.of("title-info/author/last-name", this::authorLastName)),
-//                   Tag.of("title-info/author", this::readGenre)),
+                    Tag.of("title-info/genre", this::addGenre),
+                    Tag.of("title-info/author", this::addAuthors)
+                    //Tag.of("title-info/author/first-name", this::authorFirstName),
+                    //Tag.of("title-info/author/last-name", this::authorLastName)),
+                ),
                 Tag.of("body"),
                 Tag.of("binary", this::readBinary)
             );
 
         model = struct.buildModel();
         //System.out.println(model);
+    }
+
+    private TagParser addAuthors(String tag, Book book) {
+        return get(tag, $ -> new TagParser() {
+            StringBuilder buff = new StringBuilder();
+            Author author;
+            public void chars(XMLStreamReader reader, TagStack tagPath) {
+                buff.append(reader.getText().trim());
+            }
+            public void start(XMLStreamReader reader, TagStack tagPath) {
+                System.out.println("start: "+tagPath.peek());
+                if (Objects.equals(tagPath.peek(), "author")) {
+                    author = book.getAuthors().newAuthor();
+                } else {
+                    buff.setLength(0);
+                }
+            }
+            public void end(XMLStreamReader reader, TagStack tagPath) {
+                System.out.println("end: "+tagPath.peek());
+                switch (tagPath.peek()) {
+                    case "first-name" -> author.setForename(buff.toString());
+                    case "last-name" -> author.setSurname(buff.toString());
+                    case "middle-name" ->  author.setMidname(buff.toString());
+                }
+
+            }
+        });
     }
 
     private TagParser readBinary(String tag, Book book) {
@@ -76,32 +103,17 @@ public class Fb2Book extends AbstractBook {
         });
     }
 
-    private TagParser newAuthor(String tag, Book book) {
-        return get(tag, $ -> new TagParser() {
-            public void start(XMLStreamReader reader, TagStack tagPath) {
-                book.getAuthors().addAuthor(new Author());
-            }
-        });
-    }
-
-    private TagParser authorFirstName(String tag, Book book) {
-        return get(tag, $ -> new TextTagParser() {
-            public void setValue(String value) {
-                book.getAuthors().lastAuthor().setForename(value);
-            }
-        });
-    }
-
-    private TagParser authorLastName(String tag, Book book) {
-        return get(tag, $ -> new TextTagParser() {
-            public void setValue(String value) {
-                book.getAuthors().lastAuthor().setSurname(value);
-            }
-        });
-    }
     @Override
     public XmlTag getModel() {
         return model;
+    }
+
+    private TagParser addGenre(String tag, Book book) {
+        return get(tag, $ -> new TextTagParser() {
+            public void setValue(String value) {
+                book.getGenres().addGenre(value);
+            }
+        });
     }
 }
 

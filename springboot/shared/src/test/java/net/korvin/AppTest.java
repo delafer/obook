@@ -4,14 +4,10 @@
 package net.korvin;
 
 
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 public class AppTest {
-    @Test
-    public void appHasAGreeting() {
-        App classUnderTest = new App();
-        assertNotNull("app should have a greeting", classUnderTest.getGreeting());
-    }
+//    @Test
+//    public void appHasAGreeting() {
+//        String greeting = "hello";
+//        assertNotNull(greeting);
+//    }
 }
