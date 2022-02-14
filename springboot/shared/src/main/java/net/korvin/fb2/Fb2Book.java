@@ -1,8 +1,8 @@
 package net.korvin.fb2;
 
 import net.j7.ebook.entity.ebook.Author;
-import net.j7.ebook.entity.ebook.Book;
 import net.korvin.entities.AbstractBook;
+import net.korvin.entities.BookCage;
 import net.korvin.entities.Tag;
 import net.korvin.entities.XmlTag;
 import net.korvin.entities.parsers.Attr;
@@ -18,9 +18,10 @@ import java.util.Base64;
 import java.util.Objects;
 
 public class Fb2Book extends AbstractBook {
-
     XmlTag model;
-    {
+
+    public Fb2Book() {
+        super();
         modelReader();
     }
 
@@ -33,35 +34,45 @@ public class Fb2Book extends AbstractBook {
             Tag.of("FictionBook",
                 Tag.of("description",
                     Tag.of("title-info/genre", this::addGenre),
-                    Tag.of("title-info/author", this::addAuthors)
-                    //Tag.of("title-info/author/first-name", this::authorFirstName),
-                    //Tag.of("title-info/author/last-name", this::authorLastName)),
+                    Tag.of("title-info/author", this::addAuthors),
+                    Tag.of("title-info/book-title", this::addTitle),
+                    Tag.of("title-info/annotation", this::addAnnotation)
                 ),
                 Tag.of("body"),
+                Tag.of("description/title-info/coverpage/image", this::readCover),
                 Tag.of("binary", this::readBinary)
             );
-
-        model = struct.buildModel();
-        //System.out.println(model);
+        model = struct.buildModel(holder);
+//        System.out.println(model);
     }
 
-    private TagParser addAuthors(String tag, Book book) {
-        return get(tag, $ -> new TagParser() {
+    private TagParser readCover(String s, BookCage that) {
+        return new TagParser() {
+            @Override
+            public void start(XMLStreamReader reader, TagStack tagPath) {
+                Attr atrs = new Attr(reader);
+                System.out.println("Image cover: "+atrs.get("href"));
+            }
+        };
+    }
+
+    private TagParser addAuthors(String tag, BookCage that) {
+        return new TagParser() {
             StringBuilder buff = new StringBuilder();
             Author author;
             public void chars(XMLStreamReader reader, TagStack tagPath) {
                 buff.append(reader.getText().trim());
             }
             public void start(XMLStreamReader reader, TagStack tagPath) {
-                System.out.println("start: "+tagPath.peek());
+                //System.out.println("start: "+tagPath.peek());
                 if (Objects.equals(tagPath.peek(), "author")) {
-                    author = book.getAuthors().newAuthor();
+                    author = that.book.getAuthors().newAuthor();
                 } else {
                     buff.setLength(0);
                 }
             }
             public void end(XMLStreamReader reader, TagStack tagPath) {
-                System.out.println("end: "+tagPath.peek());
+                //System.out.println("end: "+tagPath.peek());
                 switch (tagPath.peek()) {
                     case "first-name" -> author.setForename(buff.toString());
                     case "last-name" -> author.setSurname(buff.toString());
@@ -69,11 +80,11 @@ public class Fb2Book extends AbstractBook {
                 }
 
             }
-        });
+        };
     }
 
-    private TagParser readBinary(String tag, Book book) {
-        return get(tag, $ -> new TagParser() {
+    private TagParser readBinary(String tag, BookCage that) {
+        return new TagParser() {
             public void start(XMLStreamReader reader, TagStack tagPath) {
                 Attr attr = new Attr(reader);
                 System.out.println(attr.get("id")+ "  "+attr.get("content-type"));
@@ -100,7 +111,7 @@ public class Fb2Book extends AbstractBook {
                     System.out.println("["+text+"]");
                 }
             }
-        });
+        };
     }
 
     @Override
@@ -108,12 +119,27 @@ public class Fb2Book extends AbstractBook {
         return model;
     }
 
-    private TagParser addGenre(String tag, Book book) {
-        return get(tag, $ -> new TextTagParser() {
+
+    private TagParser addGenre(String tag, BookCage that) {
+        return new TextTagParser() {
             public void setValue(String value) {
-                book.getGenres().addGenre(value);
+                that.book.getGenres().addGenre(value);
             }
-        });
+        };
+    }
+
+    private TagParser addTitle(String tag, BookCage that) {
+        return new TextTagParser() {
+            public void setValue(String value) {
+                that.book.setTitle(value);
+        }};
+    }
+
+    private TagParser addAnnotation(String tag, BookCage that) {
+        return new TextTagParser() {
+            public void setValue(String value) {
+                that.book.setDescription(value);
+            }};
     }
 }
 

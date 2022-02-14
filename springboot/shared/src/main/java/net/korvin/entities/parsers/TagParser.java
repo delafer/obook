@@ -1,6 +1,5 @@
 package net.korvin.entities.parsers;
 
-import net.j7.ebook.entity.ebook.Book;
 import net.korvin.entities.PoolObject;
 import net.korvin.utils.TagStack.TagStack;
 
@@ -11,11 +10,11 @@ import static javax.xml.stream.XMLStreamConstants.*;
 public abstract class TagParser extends PoolObject {
     static int j = 0;
     {
+//        new Throwable().printStackTrace(System.out);
         j++;
         System.out.println("Instantiated: "+this.getClass().getSimpleName()+"["+j+"]");
 
     }
-    Book model;
     TagParser parent;
 
 

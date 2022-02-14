@@ -5,6 +5,7 @@ import net.j7.ebook.entity.ebook.Book;
 import net.korvin.entities.AbstractBook;
 import net.korvin.entities.XmlTag;
 import net.korvin.entities.parsers.TagParser;
+import net.korvin.fb2.Fb2Book;
 import net.korvin.utils.TagStack.TagStack;
 import org.codehaus.stax2.XMLInputFactory2;
 
@@ -53,20 +54,22 @@ public abstract class StaxReader {
         f.configureForSpeed();
         return (XMLInputFactory2) f;
     }
-
     private String tagName(XMLStreamReader streamReader) {
         return streamReader.getName().getLocalPart();
     }
+
+    static AbstractBook model = new Fb2Book();
 
     public Book process(InputStream inputStream) throws FileNotFoundException, XMLStreamException, TransformerException {
         XMLInputFactory factory = this.factory.get();
         XMLStreamReader streamReader = factory.createXMLStreamReader(inputStream);
         var stackPath = new TagStack();
         var stackStruct = new Stack<XmlTag>();
-        AbstractBook model = getParsingModel();
-        var book = new Book();
+        //AbstractBook model = getParsingModel();
         TagParser parser = null;
         XmlTag next = model.getModel();
+
+        model.newBook();
 
         boolean eod = false;
         while (!eod && streamReader.hasNext()) {
@@ -79,7 +82,7 @@ public abstract class StaxReader {
                     if (null != next) {
                         next = next.getTag(tag);
                         if (null !=next) {
-                            parser = next.getParser(tag, book);
+                            parser = next.getParser();
                         } else
                         if (parser != null && !parser.allowChilds()) {
                              parser = null;
@@ -96,7 +99,7 @@ public abstract class StaxReader {
                         stackPath.pop(); //tagStack.pop(tag)
                         next = stackStruct.pop();
                         if (null != next) {
-                            parser = next.getParser(stackPath.peek(), book);
+                            parser = next.getParser();//next.getParser(stackPath.peek(), book);
                         }
                     }
                 }
@@ -110,7 +113,7 @@ public abstract class StaxReader {
                 }
             }
         }
-
+        Book book = model.releaseBook();
 
         System.out.println("FINISHED: "+book.getAuthors());
         //TagProcessor t = processorMap.get(tagStack);

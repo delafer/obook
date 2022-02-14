@@ -1,6 +1,5 @@
 package net.korvin.entities;
 
-import net.j7.ebook.entity.ebook.Book;
 import net.korvin.entities.parsers.TagParser;
 import net.korvin.utils.StringIterator;
 
@@ -27,12 +26,12 @@ public class Tag {
     //    static Map<TagStack, BiFunction<String, Book, TagParser>> parsers = new ConcurrentHashMap<>();
 
     String path;
-    BiFunction<String, Book, TagParser>  consumer;
+    BiFunction<String, BookCage, TagParser>  consumer;
     Map<String, Tag> children = new TreeMap<>();
 
     public void init() {}
 
-    private Tag(String tagPath, BiFunction<String, Book, TagParser> consumer) {
+    private Tag(String tagPath, BiFunction<String, BookCage, TagParser> consumer) {
         this.path = tagPath;
         this.consumer = consumer;
     }
@@ -52,7 +51,7 @@ public class Tag {
 //    }
 
 
-    public static Tag of(String tag, BiFunction<String, Book, TagParser>  consumer) {
+    public static Tag of(String tag, BiFunction<String, BookCage, TagParser>  consumer) {
         return new Tag(tag, consumer);
     }
 
@@ -60,24 +59,24 @@ public class Tag {
         return new Tag(tag, structs);
     }
 
-    public XmlTag buildModel() {
-        XmlTag child = this.buildTree(null);
+    public XmlTag buildModel(BookCage bc) {
+        XmlTag child = this.buildTree(null, bc);
         XmlTag ret = new XmlTag("");
         ret.children.put(child.tag, child);
         return ret;
     }
 
-    protected XmlTag buildTree(XmlTag root) {
-        XmlTag base = getTreeBlock(root, this);
+    protected XmlTag buildTree(XmlTag root, BookCage bc) {
+        XmlTag base = getTreeBlock(root, this, bc);
         for (Map.Entry<String, Tag> next : this.children.entrySet()) {
             //System.out.println(":::"+next.getKey());
-            getTreeBlock(base, next.getValue());
-            next.getValue().buildTree(base);
+//            getTreeBlock(base, next.getValue(), bc);
+            next.getValue().buildTree(base, bc);
         }
         return base;
     }
 
-    private static XmlTag getTreeBlock(XmlTag root, Tag tagArg) {
+    private static XmlTag getTreeBlock(XmlTag root, Tag tagArg, BookCage bc) {
         XmlTag xtag = root, ret = null;
         Iterator<String> it = StringIterator.path(tagArg.path);
 
@@ -86,7 +85,11 @@ public class Tag {
             xtag = xtag == null ? new XmlTag(next, xtag) : xtag.addChild(next);
             if (null == ret) ret = xtag;
         }
-        xtag.consumer = tagArg.consumer;
+        if (null != tagArg.consumer) {
+            //System.out.println(":::"+tagArg+" : "+xtag+" : "+root);
+            xtag.consumer = tagArg.consumer.apply(xtag.tag, bc);
+        }
+
         //tagArg.buildTree(root);
         //xtagTree.parent = xtag;
         return ret;
