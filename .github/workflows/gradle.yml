@@ -28,5 +28,4 @@ jobs:
     - name: Install Libs and Build with Maven
       run: |
           cd springboot;
-          ll;
           ./gradlew build
