@@ -32,7 +32,8 @@ jobs:
       with:
         build-root-directory: springboot
         arguments: build
-    - name: |
+    - name: Upload Artifact after Action Run
+      run: |
           mkdir -p obook/beta/release/
           pwd;
           ls -l;
