@@ -2,7 +2,7 @@
 *.class
 
 # Package Files #
-*.jar
+#*.jar
 *.war
 *.ear
 
@@ -113,7 +113,7 @@ workspace/Servers/*/web.xml
 
 frontend/client-gui/new  2.txt
 #*.dll
-*.properties
+#*.properties
 .recommenders/
 desktop.ini
 _zlst.csv

@@ -1,14 +1,18 @@
 package net.j7.ebook.api.ws;
 
 import net.j7.ebook.entity.ChatMessage;
+import net.j7.ebook.entity.User;
+import net.j7.ebook.entity.UserType;
+import net.j7.ebook.persistence.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+
+import java.util.Date;
 
 
 @Controller
@@ -17,6 +21,9 @@ public class ChatController {
 
 	@Autowired
 	private SimpMessagingTemplate messagingTemplate;
+
+	@Autowired
+	private UserRepository repo;
 
 	//    @SubscribeMapping("/students/get")
 	//    @RequestMapping("/students/get")
@@ -34,6 +41,19 @@ public class ChatController {
 	public void sendMessage(@Payload ChatMessage chatMessage) {
 		System.out.println("Message recieved: "+chatMessage);
 		messagingTemplate.convertAndSend("/chat/reply",new ChatMessage("Mesage recieved","ServerBot") );
+
+		saveUser();
+	}
+
+	private void saveUser() {
+		User user = new User();
+		user.setUserName("Sasha");
+		user.setEmail("test@test.org");
+		user.setCreatedTime(new Date());
+		user.setPassword("start123");
+		user.setUserType(UserType.EMPLOYEE);
+		user.setDateofBirth(new Date());
+		repo.save(user);
 	}
 
 

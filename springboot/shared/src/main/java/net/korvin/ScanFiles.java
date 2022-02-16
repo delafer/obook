@@ -50,7 +50,7 @@ public class ScanFiles {
             fw.write(x.getPath());
             fw.write("\r\n");
             //System.out.print("Processing: "+x.getPath()+" ::: ");
-            TagEngine te = new TagEngine();
+            Fb2Reader te = new Fb2Reader();
             FileInputStream fis = new FileInputStream(x);
             te.process(fis);
             //System.out.println("done: "+x.getPath());
