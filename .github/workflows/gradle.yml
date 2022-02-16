@@ -26,5 +26,7 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
     - name: Build with Gradle
-      working-directory: ./springboot
-      run: ./gradlew build
+      run: |
+      cd springboot;
+      ll;
+      ./gradlew build;
