@@ -32,3 +32,9 @@ jobs:
       with:
         build-root-directory: springboot
         arguments: build
+    - name: |
+          mkdir -p obook/beta/release/
+          pwd;
+          ls -l;
+          ls -l target;
+          
