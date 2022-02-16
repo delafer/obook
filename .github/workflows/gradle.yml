@@ -25,9 +25,8 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-    - name: Change Dir
-      run: cd springboot
     - name: Build with Gradle
       uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
       with:
+        build-root-directory: springboot
         arguments: build
