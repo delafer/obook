@@ -34,8 +34,13 @@ jobs:
         arguments: build
     - name: Upload Artifact after Action Run
       run: |
-          mkdir -p obook/beta/release/
-          pwd;
-          ls -l;
-          ls -l target;
+        mkdir -p obook/beta/release/
+        pwd;
+        ls -l;
+        cp springboot/backend/build/libs/*SNAPSHOT.jar obook/beta/release/;
+    - uses: actions/upload-artifact@master
+      with:
+        name: obook-1.0.0-SNAPSHOT
+        path: obook/beta/release
+          
           
