@@ -10,11 +10,25 @@ public class Tag implements Block {
     Tag parent;
     Attributes attrs;
     boolean selfClosing;
+    String text;
+
+    public Tag(Name name) {
+        this.name = name;
+    }
 
     public void addOutside(Tag tag) {}
     public void addInside(Tag tag) {}
-    public void addText(String text) {}
-    public void setText(String text) {}
+
+    public void addText(String text) {
+        if (this.text != null) {
+            this.text += text;
+        } else {
+            setText(text);
+        }
+    }
+    public void setText(String text) {
+        this.text = text;
+    }
 
     public Tag getParent(Function<Tag, Boolean> check, int maxDeep) { return null; }
     public boolean hasParent(Function<Tag, Boolean> check, int maxDeep) { return null != getParent(check, maxDeep); }

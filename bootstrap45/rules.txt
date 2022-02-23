@@ -1,0 +1,8 @@
+[attrs]
+Rename data-toggle to data-bs-toggle
+Rename data-target to data-bs-target
+Rename data-parent to data-bs-parent
+Rename data-dismiss to data-bs-dismiss
+Rename data-offset to data-bs-offset
+Rename data-interval to data-bs-interval
+Rename data-ride to data-bs-ride
