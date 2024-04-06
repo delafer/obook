@@ -2,7 +2,7 @@
  * @File: LoggerJUL.java
  *
  *
- * @Author: Alexander Tawrowski
+ * @Author: Alexandr Tawrowski
  *
  * @Version $Revision: #1 $Date: $
  *
